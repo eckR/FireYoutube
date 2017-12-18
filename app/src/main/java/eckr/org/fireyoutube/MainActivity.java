@@ -15,10 +15,13 @@
 package eckr.org.fireyoutube;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -49,6 +52,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         webView = findViewById(R.id.webview);
+        webView.setPadding(0,0,0,0);
+
+        int scale = getScale(webView.getRight()-webView.getLeft());
+        //webView.setInitialScale(scale);
         WebViewClient client = new WebViewClient();
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -56,11 +63,13 @@ public class MainActivity extends Activity {
         webSettings.setAllowContentAccess(true);
         webSettings.setEnableSmoothTransition(true);
         webSettings.setLoadsImagesAutomatically(true);
-        webSettings.setLoadWithOverviewMode(true);
+        //webSettings.setLoadWithOverviewMode(true);
         webSettings.setSupportZoom(false);
         webSettings.setUseWideViewPort(true);
         webSettings.setAppCacheEnabled(true);
         webSettings.setSupportMultipleWindows(true);
+        //webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);
         webSettings.setDomStorageEnabled(true);
         webSettings.setDefaultTextEncodingName("utf-8");
         webSettings.setUserAgentString("Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36");
@@ -88,5 +97,13 @@ public class MainActivity extends Activity {
     private void simulateKeyPress(View view, int keyCode) {
         view.dispatchKeyEvent(new KeyEvent(ACTION_DOWN, keyCode));
         view.dispatchKeyEvent(new KeyEvent(ACTION_UP, keyCode));
+    }
+
+    private int getScale(int picWidth){
+        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+        int width = display.getWidth();
+        Double val = new Double(width)/new Double(picWidth);
+        val = val * 100d;
+        return val.intValue();
     }
 }
